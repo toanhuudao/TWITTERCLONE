@@ -1,0 +1,10 @@
+extends layouts/login-layout
+block content
+    .loginContainer
+        h1 Login
+        p.text-danger.errorMessage #{errorMessage}
+        form#login-form
+            input.log-user(type="text", name="logUserName" placeholder="username or email" required)
+            input.log-password(type="password", name="logPassword" placeholder="********" required)
+            input(type="submit", value="login")
+        a(href="/register") Need an account?  Register here!

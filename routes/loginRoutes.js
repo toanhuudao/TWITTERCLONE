@@ -1,14 +1,38 @@
 const express = require('express');
-const app = express();
+const User = require('../schemas/User');
 
 const router = express.Router();
 
-
-app.set("view engine", "pug");
-app.set("views", "views");
-
 router.get('/', (req, res, next) => {
-    res.status(200).render("home");
+    res.status(200).render("login");
+})
+
+router.post('/', async (req, res, next) => {
+    const {logUsername, logPassword} = req.body;
+    console.log(req.body)
+    try {
+        if (!logUsername || !logPassword) {
+            return res.status(200).json({
+                errorMessage: "Need email and password to login."
+            })
+        }
+
+        const user = await User.findOne({$or: [{email: req.body.logUsername}, {userName: req.body.logUsername}]});
+
+        if (!user || !await user.correctPassword(logPassword, user.password)) {
+            return res.status(200).json({
+                errorMessage: "Incorrect username/email or password."
+            })
+        }
+
+        req.session.user = user;
+        return res.status(200).json({
+            errorMessage:undefined,
+            user
+        })
+    } catch (e) {
+        console.log(e)
+    }
 })
 
 module.exports = router;

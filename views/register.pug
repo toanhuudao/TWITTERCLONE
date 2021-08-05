@@ -1,0 +1,14 @@
+extends layouts/login-layout
+block content
+    .loginContainer
+        h1 Register
+        form#register-form
+            p.text-danger.errorMessage #{errorMessage}
+            input.firstName(type="text", name="firstName" placeholder="First name" value=firstName  required)
+            input.lastName(type="text", name="lastName" placeholder="Last name" value=lastName required)
+            input.userName(type="text", name="userName" placeholder="User name" value=userName required)
+            input.email(type="email", name="email" placeholder="Email" value=email required)
+            input.password(type="password", name="password" value=password placeholder="Password" required)
+            input.passwordConf(type="password", name="passwordConf" value=passwordConf placeholder="Confirm password" required)
+            input(type="submit" value="Register")
+        a(href="/login") Already have an account? Login here.

@@ -3,6 +3,15 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport" content="width-device-width, initial-scale=1.0")
-        title= `${payload.pageTitle}`
+        title= pageTitle
     body
-        block content
+        .wrapper
+            .row
+                nav.col-2
+                    span Navbar
+                .mainSectionCOntainer.col-8
+                    block content
+                .col-2
+                    span third column
+
+    script(src="/javascript/bundle.js")
