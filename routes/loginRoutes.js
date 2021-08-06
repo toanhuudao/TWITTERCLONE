@@ -1,5 +1,5 @@
 const express = require('express');
-const User = require('../schemas/User');
+const User = require('../schemas/UserModel');
 
 const router = express.Router();
 
@@ -9,7 +9,6 @@ router.get('/', (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
     const {logUsername, logPassword} = req.body;
-    console.log(req.body)
     try {
         if (!logUsername || !logPassword) {
             return res.status(200).json({

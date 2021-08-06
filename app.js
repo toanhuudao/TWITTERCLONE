@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
+require('dotenv').config({ path: './config.env' })
 const port = 3004;
 const middleware = require('./middleware');
 const path = require('path');
 const mongoose = require('./database')
 const session = require('express-session')
 const cors = require("cors");
+const globalErrorHandler =require("./controllers/errorController")
 
 const server = app.listen(port, () => {
     console.log('server listening on port: ' + port)
@@ -32,16 +34,25 @@ app.use(session({
 //Routes
 const loginRoute = require('./routes/loginRoutes');
 const registerRoute = require('./routes/registerRoutes')
+const logoutRoute = require('./routes/logoutRoutes')
+//API routes
+const postsApiRoute = require('./routes/api/postsRoute')
+const likesApiRoute = require('./routes/api/likesRoute')
+
 app.use("/login", loginRoute);
 app.use("/register", registerRoute);
+app.use("/logout", logoutRoute);
 
+app.use("/api/posts", postsApiRoute);
+app.use("/api/likes", likesApiRoute);
 
 app.get('/', middleware.requireLogin, (req, res, next) => {
     const payload = {
         pageTitle: "home",
         userLoggedIn: req.session.user
     }
-
     res.status(200).render("home", payload);
 });
+
+app.use(globalErrorHandler);
 

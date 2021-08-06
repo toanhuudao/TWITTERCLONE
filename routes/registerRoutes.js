@@ -1,6 +1,5 @@
 const express = require('express');
-
-const User = require('../schemas/User')
+const User = require('../schemas/UserModel')
 const bcrypt = require('bcrypt');
 const multer = require('multer')
 
