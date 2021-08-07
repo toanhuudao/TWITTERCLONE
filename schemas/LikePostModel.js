@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const likePostSchema = new mongoose.Schema({
-    likedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    likedPost: {type: mongoose.Schema.Types.ObjectId, ref: "Post"}
+    likedBy: {type: mongoose.Schema.ObjectId, ref: "User"},
+    likedPost: {type: mongoose.Schema.ObjectId, ref: "Post"}
 }, {timestamps: true,toJSON: { virtuals: true }, toObject: { virtuals: true }})
 
 likePostSchema.pre(/^find/, function(next) {
-    this.populate({path:"user",select:"userName email"}).populate("post");
+    this.populate({path:"likedBy",select:"userName"}).populate({path:"likedPost",select:"content"});
     next();
 });
 

@@ -11,12 +11,16 @@ const postSchema = new mongoose.Schema({
 
 const Post = mongoose.model("Post", postSchema);
 
-postSchema.virtual("likedBy", {
+postSchema.virtual("likedByUsers", {
     ref: "LikePost",
     foreignField: "likedPost",
     localField: "_id",
-    options: {sort: {createAt: 1}}
 });
+
+// postSchema.pre(/^find/, function(next) {
+//     this.populate({path:"likedByUsers"});
+//     next();
+// });
 
 module.exports = Post;
 

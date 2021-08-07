@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
     //     return next(new AppError("Please login !", 400));
     // } // TODO pass it to test post man, need open again
 
-    const features = new ApiFeatures(Post.find(),req.query)
+    const features = new ApiFeatures(Post.find(), req.query)
         .filter()
         .sort()
         .limitFields()
@@ -26,6 +26,14 @@ router.get('/', async (req, res, next) => {
         posts
     })
 })
+
+router.get('/:id', catchAsync(async (req, res, next) => {
+    const data = await Post.findById({_id: req.params.id}).populate({path:"likedByUsers", select:"likedBy -likedPost"});
+    return res.status(200).json({
+        status: "success",
+        data
+    })
+}))
 
 router.post('/', catchAsync(async (req, res, next) => {
     if (!req.body.content) {
