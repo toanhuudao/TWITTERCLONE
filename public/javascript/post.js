@@ -46,8 +46,8 @@ export const createPostHtml = (postData) => {
                                     <i class="far fa-comment"></i>
                                 </button>
                             </div>
-                             <div class="postButtonContainer">
-                                <button>
+                             <div class="postButtonContainer green">
+                                <button class="retweetButton">
                                     <i class="fas fa-retweet"></i>
                                 </button>
                             </div>
@@ -111,4 +111,20 @@ export const getPostIdFromElement = (element) => {
     const postId = rootElement.data().id;
     if (!postId) return alert("Post id undefined");
     return postId;
+}
+
+export const retweetPostToggle =async (postId) => {
+
+    try {
+        const res = await axios({
+            method: 'PUT',
+            url: `api/posts/${postId}/tweets`
+        })
+        console.log(res)
+
+        return res.data
+    } catch (e) {
+        if (e.response) return e.response.data
+        return e
+    }
 }

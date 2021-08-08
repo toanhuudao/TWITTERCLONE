@@ -1,7 +1,15 @@
 import "@babel/polyfill";
 import {submit} from "./Register";
 import {login} from "./login";
-import {createPost, createPostHtml, getPosts, outputPosts, likePostToggle, getPostIdFromElement} from "./post";
+import {
+    createPost,
+    createPostHtml,
+    getPosts,
+    outputPosts,
+    likePostToggle,
+    getPostIdFromElement,
+    retweetPostToggle
+} from "./post";
 import "./home"
 
 $(document).ready(async () => {
@@ -57,8 +65,6 @@ $(document).ready(async () => {
                 document.querySelector(".postsContainer").insertAdjacentHTML("afterbegin", html);
             }
         })
-
-
     }
 
     if (postsContainer.length) {
@@ -72,6 +78,19 @@ $(document).ready(async () => {
         const button = $(evt.target);
         const postId = getPostIdFromElement(button);
         const postData = await likePostToggle(postId);
+        button.find("span").text(postData.totalLikeOfPost || "")
+        if (postData.isLikeByCurrentUser) {
+            button.addClass("active");
+        } else {
+            button.removeClass("active");
+        }
+    })
+
+    $(document).on("click", ".retweetButton", async (evt) => {
+
+        const button = $(evt.target);
+        const postId = getPostIdFromElement(button);
+        const postData = await retweetPostToggle(postId);
         button.find("span").text(postData.totalLikeOfPost || "")
         if (postData.isLikeByCurrentUser) {
             button.addClass("active");

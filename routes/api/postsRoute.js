@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../../schemas/UserModel')
 const Post = require('../../schemas/PostModel')
 const likeRouter = require('./likesRoute')
+const tweetsRouter = require('./tweetsRoute')
 const catchAsync = require("../../utils/catchAsync")
 const AppError = require("../../utils/appError")
 const ApiFeatures = require("../../utils/apiFeatures")
@@ -78,7 +79,8 @@ router.post('/', catchAsync(async (req, res, next) => {
     })
 }))
 
-router.use('/:postId/likes', likeRouter)
+router.use('/:postId/likes', likeRouter);
+router.use('/:postId/retweets', tweetsRouter);
 
 module.exports = router;
 

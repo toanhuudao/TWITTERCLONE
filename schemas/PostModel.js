@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
-    content: {type: String, required: true, trim: true},
+    content: {type: String, trim: true, default: ""},
     postedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     pinned: {type: Boolean, default: false},
     isLikeByCurrentUser: {type: Boolean, default: false}
@@ -20,6 +20,15 @@ postSchema.virtual("likedByUsers", {
         isLiked: true
     }
 });
+
+postSchema.virtual("retweetByUsers", {
+    ref: "Retweet",
+    foreignField: "retweetFrom",
+    localField: "_id",
+    match: {
+        isActive: true
+    }
+})
 
 // postSchema.pre(/^find/, function(next) {
 //     this.populate({path:"likedByUsers"});

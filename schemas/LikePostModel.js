@@ -7,7 +7,7 @@ const likePostSchema = new mongoose.Schema({
 }, {timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}})
 
 likePostSchema.pre(/^find/, function (next) {
-    this.populate({path: "likedBy", select: "userName"}).populate({path: "likedPost", select: "content"});
+    this.populate({path: "likedBy", select: "userName"}).populate({path: "likedPost", select: "content postedBy"});
     next();
 });
 
