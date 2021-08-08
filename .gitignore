@@ -1,2 +1,3 @@
 /.cache/
 ./config.env
+./public/javascript/bundle.js
