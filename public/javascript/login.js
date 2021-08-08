@@ -12,8 +12,6 @@ export const login = async (logUsername, logPassword) => {
             withCredentials: true
         })
 
-        console.log(res)
-
         if (res.data.errorMessage) {
             document.querySelector(".errorMessage").innerHTML = `${res.data.errorMessage}`
         }

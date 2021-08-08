@@ -9,7 +9,6 @@ export const submit = async (data) => {
             url: "http://127.0.0.1:3004/register",
             data
         });
-        console.log(res)
     if (res.data.status === "success"){
         console.log("in")
         location.assign("/");

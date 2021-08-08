@@ -8,6 +8,7 @@ export const createPost = async (data) => {
             url: "api/posts",
             data
         });
+        console.log(res.data)
         return res.data
     } catch (e) {
         if (e.response) {
@@ -23,7 +24,9 @@ export const createPostHtml = (postData) => {
     const displayName = postedBy.firstName + " " + postedBy.lastName;
     const timestamp = timeDifference(new Date(), new Date(postData.createdAt));
 
-    return `<div class="post">
+    const isActiveClass = postData.isLikeByCurrentUser ? "active" : "";
+
+    return `<div class="post" data-id="${postData._id}">
                 <div class="mainContentContainer">
                      <div class="userImageContainer">
                         <img src="${postedBy.profilePic}" alt="user picture">
@@ -48,9 +51,10 @@ export const createPostHtml = (postData) => {
                                     <i class="fas fa-retweet"></i>
                                 </button>
                             </div>
-                             <div class="postButtonContainer">
-                                <button>
+                             <div class="postButtonContainer red">
+                                <button class="likeButton ${isActiveClass}">
                                     <i class="far fa-heart"></i>
+                                    <span>${postData.likedByUsers.length || ""}</span>
                                 </button>
                             </div>
                         </div>
@@ -77,15 +81,34 @@ export const getPosts = async () => {
 };
 export const outputPosts = (results, container) => {
     container.html("");
-    results.forEach(result => {
-        const html = createPostHtml(result);
+    results.forEach(postData => {
+        const html = createPostHtml(postData);
         container.append(html);
     })
-    console.log(container)
-    if (results.length===0){
+    if (results.length === 0) {
         container.append(`<span>Nothing to show.</span>`)
     }
 };
 
+export const likePostToggle = async (postId) => {
 
+    try {
+        const res = await axios({
+            method: 'PUT',
+            url: `api/posts/${postId}/likes`
+        })
 
+        return res.data
+    } catch (e) {
+        if (e.response) return e.response.data
+        return e
+    }
+}
+
+export const getPostIdFromElement = (element) => {
+    const isRoot = element.hasClass("post");
+    const rootElement = isRoot ? element : element.closest(".post");
+    const postId = rootElement.data().id;
+    if (!postId) return alert("Post id undefined");
+    return postId;
+}

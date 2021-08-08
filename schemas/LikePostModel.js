@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const likePostSchema = new mongoose.Schema({
     likedBy: {type: mongoose.Schema.ObjectId, ref: "User"},
     likedPost: {type: mongoose.Schema.ObjectId, ref: "Post"},
-    isLiked: {type: Boolean, default: false}
+    isLiked: {type: Boolean, default: true}
 }, {timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}})
 
 likePostSchema.pre(/^find/, function (next) {

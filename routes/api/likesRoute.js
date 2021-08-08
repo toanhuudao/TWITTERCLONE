@@ -5,7 +5,7 @@ const LikePost = require('../../schemas/LikePostModel')
 const catchAsync = require("../../utils/catchAsync")
 const AppError = require("../../utils/appError")
 const ApiFeatures = require("../../utils/apiFeatures")
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 
 router.get('/', async (req, res, next) => {
 
@@ -21,11 +21,14 @@ router.get('/:id', async (req, res, next) => {
     })
 })
 
-router.post('/', catchAsync(async (req, res, next) => {
+router.put('/', catchAsync(async (req, res, next) => {
     // TODO need check if user logged in. not allow create post with req.body
-    const {likedBy, likedPost} = req.body;
+    // const {likedBy, likedPost} = req.body;
+    const likedPost = req.params.postId;
+    const likedBy = req.session.user._id;
+
     if (!likedBy || !likedPost) {
-        return new AppError('Need Logged in and likes a post ', 400)
+        return next(new AppError('Undefined logged in/ post', 400))
     }
 
     let data = await LikePost.findOne({likedBy, likedPost});
@@ -37,9 +40,14 @@ router.post('/', catchAsync(async (req, res, next) => {
         data = await data.save();
     }
 
+    const totalLikeOfPost = await LikePost.find({likedPost, isLiked: true}).count();
+    const isLikeByCurrentUser = !!(await LikePost.find({likedPost, likedBy, isLiked: true}).count());
+
     return res.status(200).json({
         status: "success",
-        data
+        data,
+        totalLikeOfPost,
+        isLikeByCurrentUser
     })
 
 }))

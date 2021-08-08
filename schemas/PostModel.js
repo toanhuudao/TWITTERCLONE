@@ -4,6 +4,7 @@ const postSchema = new mongoose.Schema({
     content: {type: String, required: true, trim: true},
     postedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     pinned: {type: Boolean, default: false},
+    isLikeByCurrentUser: {type: Boolean, default: false}
 
 }, {
     timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}
@@ -15,6 +16,9 @@ postSchema.virtual("likedByUsers", {
     ref: "LikePost",
     foreignField: "likedPost",
     localField: "_id",
+    match: {
+        isLiked: true
+    }
 });
 
 // postSchema.pre(/^find/, function(next) {

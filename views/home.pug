@@ -1,6 +1,7 @@
 extends layouts/main-layout
 
 block content
+    p = #{userLoggedIn.userName}
     +createPostForm(userLoggedIn)
     .postsContainer
 

@@ -5,7 +5,8 @@
     --spacing: 15px;
     --bluelight: #9BD1F9;
     --greyText: rgb(101, 119, 134);
-    --greyButtonText: rgba(0,0,0,0.34)
+    --greyButtonText: rgba(0, 0, 0, 0.34);
+    --red: rgb(226, 34, 94);
 }
 
 * {
@@ -58,7 +59,7 @@ nav a:hover {
 button {
     background-color: transparent;
     border: none;
-    color:var(--greyButtonText) ;
+    color: var(--greyButtonText);
 }
 
 .mainSectionContainer {
@@ -164,6 +165,11 @@ button {
     padding: 2px 7px;
 }
 
+.likeButton span,
+.likeButton i {
+    pointer-events: none;
+}
+
 .header a:hover {
     text-decoration: underline;
 }
@@ -179,7 +185,6 @@ button {
     border-radius: 50%;
 }
 
-
-
-
-
+.postButtonContainer.red button.active {
+    color: var(--red);
+}
