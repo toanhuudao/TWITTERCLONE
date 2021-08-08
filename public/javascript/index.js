@@ -49,12 +49,12 @@ $(document).ready(async () => {
             const data = {
                 content: postTextarea.value.trim(),
             }
+            postTextarea.value = "";
+            submitButton.disabled = true;
             const postData = await createPost(data);
             if (postData.status === "success") {
                 const html = createPostHtml(postData.post);
                 document.querySelector(".postsContainer").insertAdjacentHTML("afterbegin", html);
-                postTextarea.value = "";
-                submitButton.disabled = true;
             }
         })
 
@@ -72,7 +72,6 @@ $(document).ready(async () => {
         const button = $(evt.target);
         const postId = getPostIdFromElement(button);
         const postData = await likePostToggle(postId);
-        console.log(postData)
         button.find("span").text(postData.totalLikeOfPost || "")
         if (postData.isLikeByCurrentUser) {
             button.addClass("active");
