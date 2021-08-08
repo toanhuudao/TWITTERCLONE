@@ -13,7 +13,6 @@ router.get('/', async (req, res, next) => {
 })
 
 router.get('/:id', async (req, res, next) => {
-    // TODO need check if user logged in. not allow get like-post with req.body
     const likePost = await LikePost.findById({_id: req.params.id});
     return res.status(200).json({
         status: "success",
@@ -22,8 +21,7 @@ router.get('/:id', async (req, res, next) => {
 })
 
 router.put('/', catchAsync(async (req, res, next) => {
-    // TODO need check if user logged in. not allow create post with req.body
-    // const {likedBy, likedPost} = req.body;
+
     const likedPost = req.params.postId;
     const likedBy = req.session.user._id;
 

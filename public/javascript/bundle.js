@@ -5382,7 +5382,7 @@ if (require('./_descriptors')) {
       && has(desc, 'value')
       && !has(desc, 'get')
       && !has(desc, 'set')
-      // TODO: add validation descriptor w/o calling accessors
+
       && !desc.configurable
       && (!has(desc, 'writable') || desc.writable)
       && (!has(desc, 'enumerable') || desc.enumerable)
@@ -5858,7 +5858,7 @@ var TO_STRING_TAG = wks('toStringTag');
 var ArrayValues = Iterators.Array;
 
 var DOMIterables = {
-  CSSRuleList: true, // TODO: Not spec compliant, should be false.
+  CSSRuleList: true,
   CSSStyleDeclaration: false,
   CSSValueList: false,
   ClientRectList: false,
@@ -5871,7 +5871,7 @@ var DOMIterables = {
   HTMLCollection: false,
   HTMLFormElement: false,
   HTMLSelectElement: false,
-  MediaList: true, // TODO: Not spec compliant, should be false.
+  MediaList: true,
   MimeTypeArray: false,
   NamedNodeMap: false,
   NodeList: true,
@@ -5885,7 +5885,7 @@ var DOMIterables = {
   SVGStringList: false,
   SVGTransformList: false,
   SourceBufferList: false,
-  StyleSheetList: true, // TODO: Not spec compliant, should be false.
+  StyleSheetList: true,
   TextTrackCueList: false,
   TextTrackList: false,
   TouchList: false

@@ -12,7 +12,7 @@ router.get('/', async (req, res, next) => {
 
     if (!req.session.user) {
         return next(new AppError("Please login !", 400));
-    } // TODO pass it to test post man, need open again
+    }
 
     const features = new ApiFeatures(Post.find(), req.query)
         .filter()
@@ -53,7 +53,7 @@ router.post('/', catchAsync(async (req, res, next) => {
 
     if (!req.session.user) {
         return next(new AppError("Please login to create post!", 400));
-    } // TODO pass it to test post man, need open again
+    }
 
     const postData = {
         content: req.body.content,
