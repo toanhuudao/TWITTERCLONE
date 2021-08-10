@@ -15,12 +15,15 @@ router.get('/', async (req, res, next) => {
         return next(new AppError("Please login !", 400));
     }
 
-    const features = new ApiFeatures(Post.find(), req.query)
+    const features = new ApiFeatures(Post.find({isActive:true}), req.query)
         .filter()
         .sort()
         .limitFields()
         .paginate();
-    const posts = await features.query.populate({path: "postedBy"}).populate({path: "likedByUsers"})
+    const posts = await features.query.populate({path: "postedBy"}).populate({path: "likedByUsers"}).populate({
+        path: "retweetTo",
+        select: "-retweetTo"
+    })
     // const posts = await Post.find().populate({path: "postedBy"});
 
     const postParse = JSON.parse(JSON.stringify(posts));
@@ -40,6 +43,8 @@ router.get('/:id', catchAsync(async (req, res, next) => {
     const data = await Post.findById({_id: req.params.id}).populate({
         path: "likedByUsers",
         select: "likedBy -likedPost"
+    }).populate({
+        path: "retweetBy",
     });
     return res.status(200).json({
         status: "success",

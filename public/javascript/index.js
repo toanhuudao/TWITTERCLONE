@@ -69,7 +69,6 @@ $(document).ready(async () => {
 
     if (postsContainer.length) {
         const res = await getPosts();
-        console.log(res)
         outputPosts(res.posts, postsContainer);
     }
 
@@ -91,11 +90,12 @@ $(document).ready(async () => {
         const button = $(evt.target);
         const postId = getPostIdFromElement(button);
         const postData = await retweetPostToggle(postId);
-        button.find("span").text(postData.totalLikeOfPost || "")
-        if (postData.isLikeByCurrentUser) {
-            button.addClass("active");
-        } else {
-            button.removeClass("active");
-        }
+        console.log(postData)
+        button.find("span").text(postData.totalRetweetOfPost || "")
+        // if (postData.data.isActive) {
+        //     button.addClass("active");
+        // } else {
+        //     button.removeClass("active");
+        // }
     })
 })

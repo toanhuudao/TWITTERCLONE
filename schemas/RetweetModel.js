@@ -12,5 +12,5 @@ const retweetSchema = new mongoose.Schema({
 //     next();
 // });
 
-const Retweet = mongoose.model("Tweet", retweetSchema);
+const Retweet = mongoose.model("Retweet", retweetSchema);
 module.exports = Retweet;

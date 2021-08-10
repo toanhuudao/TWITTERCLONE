@@ -21,25 +21,44 @@ router.get('/:id', async (req, res, next) => {
 })
 
 router.put('/', catchAsync(async (req, res, next) => {
+    if (!req.session || !req.session.user) {
+        return next(new AppError('Undefined logged in/ post', 400))
+    }
 
     const retweetFrom = req.params.postId;
-    // const retweetBy = req.session.user._id;
-    // TODO change id of user to test.
-    const retweetBy = "610c15a951d07d4fec37a168"
-
-    // if (!retweetBy || !retweetPost) {
-    //     return next(new AppError('Undefined logged in/ post', 400))
-    // }
+    const retweetBy = req.session.user._id;
+    // // TODO change id of user to test.
+    // const retweetBy = "610c15a951d07d4fec37a168"
 
 
-    let data = await Retweet.findOne({retweetFrom, retweetBy});
+    if (!retweetFrom) {
+        return next(new AppError('no post selected', 400))
+    }
 
-    if (!data) {
-        const post = await Post.create({postedBy: retweetBy})
-        data = await Retweet.create({retweetBy, retweetFrom,retweetTo:post._id});
+    const currentPost = await Post.findOne({_id: retweetFrom});
+    // check if post already retweet
+    if (currentPost.retweetData.length === 0) {
+        let retweetDataOfCurrentPost = await Retweet.findOne({retweetFrom, retweetBy});
+        if (!retweetDataOfCurrentPost) {
+            const retweetByPost = await Post.create({postedBy: retweetBy})
+            await Retweet.create({retweetBy, retweetFrom, retweetTo: retweetByPost._id});
+        }
     } else {
-        data.isActive = !data.isActive;
-        data = await data.save();
+        // retweet data of current post
+        let retweetOfCurrentPost = await Retweet.findOne({
+            retweetFrom: currentPost.retweetData.retweetFrom,
+            retweetBy: currentPost.retweetData.retweetBy
+        });
+
+        //post to current user retweet
+        const retweetFromPost = await Post.findOne({_id: retweetOfCurrentPost.retweetTo});
+
+        //check if current user already retweet post of retweetData
+        if (await Retweet.findOne({retweetBy, retweetFrom: retweetFromPost._id})) {
+            //create new post and retweet of retweetData
+            const retweetByPost = await Post.create({postedBy: retweetBy})
+            await Retweet.create({retweetBy, retweetFrom: retweetFromPost._id, retweetTo: retweetByPost._id});
+        }
     }
 
     const totalRetweetOfPost = await Retweet.find({retweetFrom, isActive: true}).count();
@@ -48,7 +67,6 @@ router.put('/', catchAsync(async (req, res, next) => {
         status: "success",
         data,
         totalRetweetOfPost,
-        isRetweetByCurrentUser
     })
 
 }))

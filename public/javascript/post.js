@@ -20,6 +20,7 @@ export const createPost = async (data) => {
 }
 
 export const createPostHtml = (postData) => {
+    console.log(postData)
     const postedBy = postData.postedBy;
     const displayName = postedBy.firstName + " " + postedBy.lastName;
     const timestamp = timeDifference(new Date(), new Date(postData.createdAt));
@@ -49,6 +50,7 @@ export const createPostHtml = (postData) => {
                              <div class="postButtonContainer green">
                                 <button class="retweetButton">
                                     <i class="fas fa-retweet"></i>
+                                    <span></span>
                                 </button>
                             </div>
                              <div class="postButtonContainer red">
@@ -118,10 +120,8 @@ export const retweetPostToggle =async (postId) => {
     try {
         const res = await axios({
             method: 'PUT',
-            url: `api/posts/${postId}/tweets`
+            url: `api/posts/${postId}/retweets`
         })
-        console.log(res)
-
         return res.data
     } catch (e) {
         if (e.response) return e.response.data

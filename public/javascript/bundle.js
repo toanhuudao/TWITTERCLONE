@@ -8723,11 +8723,12 @@ var createPost = /*#__PURE__*/function () {
 exports.createPost = createPost;
 
 var createPostHtml = function createPostHtml(postData) {
+  console.log(postData);
   var postedBy = postData.postedBy;
   var displayName = postedBy.firstName + " " + postedBy.lastName;
   var timestamp = (0, _timestamp.timeDifference)(new Date(), new Date(postData.createdAt));
   var isActiveClass = postData.isLikeByCurrentUser ? "active" : "";
-  return "<div class=\"post\" data-id=\"".concat(postData._id, "\">\n                <div class=\"mainContentContainer\">\n                     <div class=\"userImageContainer\">\n                        <img src=\"").concat(postedBy.profilePic, "\" alt=\"user picture\">\n                    </div>\n                    <div class=\"postContentContainer\">\n                        <div class=\"header\">\n                            <a href=\"/profile/").concat(postedBy.userName, "\" class=\"displayName\">").concat(displayName, "</a>\n                            <span class=\"username\">").concat(postedBy.userName, "</span>\n                            <span class=\"date\">").concat(timestamp, "</span>\n                        </div>\n                        <div class=\"postBody\">\n                            <span>").concat(postData.content, "</span>\n                        </div>\n                        <div class=\"postFooter\">\n                            <div class=\"postButtonContainer\">\n                                <button>\n                                    <i class=\"far fa-comment\"></i>\n                                </button>\n                            </div>\n                             <div class=\"postButtonContainer green\">\n                                <button class=\"retweetButton\">\n                                    <i class=\"fas fa-retweet\"></i>\n                                </button>\n                            </div>\n                             <div class=\"postButtonContainer red\">\n                                <button class=\"likeButton ").concat(isActiveClass, "\">\n                                    <i class=\"far fa-heart\"></i>\n                                    <span>").concat(postData.likedByUsers.length || "", "</span>\n                                </button>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n");
+  return "<div class=\"post\" data-id=\"".concat(postData._id, "\">\n                <div class=\"mainContentContainer\">\n                     <div class=\"userImageContainer\">\n                        <img src=\"").concat(postedBy.profilePic, "\" alt=\"user picture\">\n                    </div>\n                    <div class=\"postContentContainer\">\n                        <div class=\"header\">\n                            <a href=\"/profile/").concat(postedBy.userName, "\" class=\"displayName\">").concat(displayName, "</a>\n                            <span class=\"username\">").concat(postedBy.userName, "</span>\n                            <span class=\"date\">").concat(timestamp, "</span>\n                        </div>\n                        <div class=\"postBody\">\n                            <span>").concat(postData.content, "</span>\n                        </div>\n                        <div class=\"postFooter\">\n                            <div class=\"postButtonContainer\">\n                                <button>\n                                    <i class=\"far fa-comment\"></i>\n                                </button>\n                            </div>\n                             <div class=\"postButtonContainer green\">\n                                <button class=\"retweetButton\">\n                                    <i class=\"fas fa-retweet\"></i>\n                                    <span></span>\n                                </button>\n                            </div>\n                             <div class=\"postButtonContainer red\">\n                                <button class=\"likeButton ").concat(isActiveClass, "\">\n                                    <i class=\"far fa-heart\"></i>\n                                    <span>").concat(postData.likedByUsers.length || "", "</span>\n                                </button>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n");
 };
 
 exports.createPostHtml = createPostHtml;
@@ -8860,35 +8861,34 @@ var retweetPostToggle = /*#__PURE__*/function () {
             _context4.prev = 0;
             _context4.next = 3;
             return (0, _axios.default)({
-              method: 'POST',
-              url: "api/posts/".concat(postId, "/tweets")
+              method: 'PUT',
+              url: "api/posts/".concat(postId, "/retweets")
             });
 
           case 3:
             res = _context4.sent;
-            console.log(res);
             return _context4.abrupt("return", res.data);
 
-          case 8:
-            _context4.prev = 8;
+          case 7:
+            _context4.prev = 7;
             _context4.t0 = _context4["catch"](0);
 
             if (!_context4.t0.response) {
-              _context4.next = 12;
+              _context4.next = 11;
               break;
             }
 
             return _context4.abrupt("return", _context4.t0.response.data);
 
-          case 12:
+          case 11:
             return _context4.abrupt("return", _context4.t0);
 
-          case 13:
+          case 12:
           case "end":
             return _context4.stop();
         }
       }
-    }, _callee4, null, [[0, 8]]);
+    }, _callee4, null, [[0, 7]]);
   }));
 
   return function retweetPostToggle(_x3) {
@@ -9280,7 +9280,7 @@ $(document).ready( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRunti
           }
 
           if (!postsContainer.length) {
-            _context5.next = 15;
+            _context5.next = 14;
             break;
           }
 
@@ -9289,10 +9289,9 @@ $(document).ready( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRunti
 
         case 12:
           res = _context5.sent;
-          console.log(res);
           (0, _post.outputPosts)(res.posts, postsContainer);
 
-        case 15:
+        case 14:
           $(document).on("click", ".likeButton", /*#__PURE__*/function () {
             var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(evt) {
               var button, postId, postData;
@@ -9341,13 +9340,12 @@ $(document).ready( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRunti
 
                     case 4:
                       postData = _context4.sent;
-                      button.find("span").text(postData.totalLikeOfPost || "");
-
-                      if (postData.isLikeByCurrentUser) {
-                        button.addClass("active");
-                      } else {
-                        button.removeClass("active");
-                      }
+                      console.log(postData);
+                      button.find("span").text(postData.totalRetweetOfPost || ""); // if (postData.data.isActive) {
+                      //     button.addClass("active");
+                      // } else {
+                      //     button.removeClass("active");
+                      // }
 
                     case 7:
                     case "end":
@@ -9362,7 +9360,7 @@ $(document).ready( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRunti
             };
           }());
 
-        case 17:
+        case 16:
         case "end":
           return _context5.stop();
       }
@@ -9397,7 +9395,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "9970" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "11586" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -4,7 +4,8 @@ const postSchema = new mongoose.Schema({
     content: {type: String, trim: true, default: ""},
     postedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     pinned: {type: Boolean, default: false},
-    isLikeByCurrentUser: {type: Boolean, default: false}
+    isLikeByCurrentUser: {type: Boolean, default: false},
+    isActive: {type: Boolean, default: true}
 
 }, {
     timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}
@@ -21,9 +22,9 @@ postSchema.virtual("likedByUsers", {
     }
 });
 
-postSchema.virtual("retweetByUsers", {
+postSchema.virtual("retweetData", {
     ref: "Retweet",
-    foreignField: "retweetFrom",
+    foreignField: "retweetTo",
     localField: "_id",
     match: {
         isActive: true

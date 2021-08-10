@@ -170,6 +170,11 @@ button {
     pointer-events: none;
 }
 
+.retweetButton span,
+.retweetButton i {
+    pointer-events: none;
+}
+
 .header a:hover {
     text-decoration: underline;
 }
@@ -187,4 +192,8 @@ button {
 
 .postButtonContainer.red button.active {
     color: var(--red);
+}
+
+.postButtonContainer.green button.active {
+    color: dodgerblue;
 }
