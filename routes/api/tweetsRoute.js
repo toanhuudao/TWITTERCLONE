@@ -1,4 +1,5 @@
 const express = require('express');
+const chalk = require('chalk')
 const User = require('../../schemas/UserModel')
 const Post = require('../../schemas/PostModel')
 const Retweet = require('../../schemas/RetweetModel')
@@ -26,38 +27,34 @@ router.put('/', catchAsync(async (req, res, next) => {
     }
 
     const retweetFrom = req.params.postId;
-    const retweetBy = req.session.user._id;
+    const currentUserId = req.session.user._id;
     // // TODO change id of user to test.
     // const retweetBy = "610c15a951d07d4fec37a168"
 
-
+    const currentPost = JSON.parse(JSON.stringify(await Post.findOne({_id: retweetFrom}).populate({path: "retweetData"})));
     if (!retweetFrom) {
         return next(new AppError('no post selected', 400))
     }
-    const currentPost = JSON.parse(JSON.stringify(await Post.findOne({_id: retweetFrom}).populate({path:"retweetData"})));
-    console.log(currentPost)
     // check if post already retweet
-    if (!currentPost.retweetData && !await Retweet.findOne({retweetFrom, retweetBy})) {
-        console.log("con1")
-        const retweetByPost = await Post.create({postedBy: retweetBy})
-        await Retweet.create({retweetBy, retweetFrom, retweetTo: retweetByPost._id});
-        console.log(retweetByPost)
+    if (currentPost.retweetData.length === 0 && !await Retweet.findOne({retweetFrom, retweetBy: currentUserId})) {
+        const retweetByPost = await Post.create({postedBy: currentUserId})
+        await Retweet.create({retweetBy: currentUserId, retweetFrom, retweetTo: retweetByPost._id});
     }
 
-    if (currentPost.retweetData !== undefined && !await Retweet.findOne({retweetBy, retweetFrom: currentPost.retweetData.retweetFrom})){
-        console.log("con2")
+    if (currentPost.retweetData.length !== 0 && currentPost.retweetData[0].retweetBy !== currentUserId) {
         //create new post and retweet of retweetData
-        const retweetByPost = await Post.create({postedBy: retweetBy})
-        await Retweet.create({retweetBy, retweetFrom: retweetFromPost._id, retweetTo: retweetByPost._id});
-        console.log(retweetByPost);
+        const retweetByPost = await Post.create({postedBy: currentUserId})
+        await Retweet.create({
+            retweetBy: currentUserId,
+            retweetFrom: currentPost.retweetData[0].retweetFrom,
+            retweetTo: retweetByPost._id
+        });
     }
-
-    const totalRetweetOfPost = await Retweet.find({retweetFrom, isActive: true}).count();
 
     return res.status(200).json({
         status: "success",
         data,
-        totalRetweetOfPost,
+        // totalRetweetOfPost,
     })
 
 }))
