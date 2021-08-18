@@ -1,5 +1,5 @@
 :root {
-    --blue: aqua;
+    --blue: #7FC29B;
     --buttonHoverBg: #d4edff;
     --lightGrey: rgb(230, 236, 240);
     --spacing: 15px;
@@ -170,6 +170,11 @@ button {
     pointer-events: none;
 }
 
+.modal .postFormContainer {
+    border: none;
+    padding: 0;
+}
+
 .retweetButton span,
 .retweetButton i {
     pointer-events: none;
@@ -197,3 +202,16 @@ button {
 .postButtonContainer.green button.active {
     color: dodgerblue;
 }
+
+.modal .post {
+    padding: 0 0 var(--spacing) 0;
+}
+
+.replyFlag {
+    margin-bottom: 5px;
+}
+
+.replyFlag a {
+    color: var(--blue);
+}
+

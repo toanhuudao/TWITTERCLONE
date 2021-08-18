@@ -1,6 +1,9 @@
 import "@babel/polyfill";
+import "jquery"
 import {submit} from "./Register";
 import {login} from "./login";
+import "./postPage"
+
 import {
     createPost,
     createPostHtml,
@@ -8,9 +11,10 @@ import {
     outputPosts,
     likePostToggle,
     getPostIdFromElement,
-    retweetPostToggle
+    retweetPostToggle, getPostData
 } from "./post";
 import "./home"
+import axios from "axios";
 
 $(document).ready(async () => {
 
@@ -90,7 +94,6 @@ $(document).ready(async () => {
         const button = $(evt.target);
         const postId = getPostIdFromElement(button);
         const postData = await retweetPostToggle(postId);
-        console.log(postData)
         button.find("span").text(postData.totalRetweetOfPost || "")
         // if (postData.data.isActive) {
         //     button.addClass("active");
@@ -98,4 +101,45 @@ $(document).ready(async () => {
         //     button.removeClass("active");
         // }
     })
+
+    //TODO 1
+    $("#replyModal").on("show.bs.modal", async (evt) => {
+        const button = $(evt.relatedTarget);
+        const postId = getPostIdFromElement(button);
+        const postData = await getPostData(postId);
+        // originalPostContainer
+        outputPosts([postData.data], $("#originalPostContainer"));
+        $("#submitReplyButton").attr("data-id", postId)
+    })
+
+    //TODO 2
+    $("#replyModal").on("hidden.bs.modal", async (evt) => {
+        $("#originalPostContainer").html("");
+    })
+
+    $("#submitReplyButton").click(async (evt) => {
+        const button = $(evt.target)
+        const id = button.data("id");
+        const textBox = $("#replyTextarea");
+        if (!id) return alert("button id is null");
+        let data = {
+            content: textBox.val(),
+            replyTo: id
+
+        }
+        const responseData = await createPost(data);
+        if (responseData) {
+            location.reload();
+        }
+    })
+
+    $(document).on("click", ".post", evt => {
+        const element = $(evt.target);
+        const postId = getPostIdFromElement(element);
+
+        if (postId !== undefined && !element.is("button")&&!element.is("i")) {
+            window.location.href=`posts/${postId}`
+        }
+
+    });
 })

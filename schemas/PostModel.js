@@ -5,8 +5,8 @@ const postSchema = new mongoose.Schema({
     postedBy: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
     pinned: {type: Boolean, default: false},
     isLikeByCurrentUser: {type: Boolean, default: false},
-    isActive: {type: Boolean, default: true}
-
+    isActive: {type: Boolean, default: true},
+    replyTo: {type: mongoose.Schema.Types.ObjectId, ref: "Post"}
 }, {
     timestamps: true, toJSON: {virtuals: true}, toObject: {virtuals: true}
 })

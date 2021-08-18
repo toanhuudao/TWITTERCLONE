@@ -10,7 +10,6 @@ export const submit = async (data) => {
             data
         });
     if (res.data.status === "success"){
-        console.log("in")
         location.assign("/");
     }
     } catch (e) {

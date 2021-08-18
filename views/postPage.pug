@@ -1,0 +1,10 @@
+extends layouts/main-layout
+
+block content
+    script.
+        const postId = "!{postId}"
+    .postsDetailContainer
+    +createReplyModal(userLoggedIn)
+
+block scripts
+

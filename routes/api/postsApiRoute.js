@@ -15,7 +15,7 @@ router.get('/', async (req, res, next) => {
         return next(new AppError("Please login !", 400));
     }
 
-    const features = new ApiFeatures(Post.find({isActive:true}), req.query)
+    const features = new ApiFeatures(Post.find({isActive: true}), req.query)
         .filter()
         .sort()
         .limitFields()
@@ -23,6 +23,9 @@ router.get('/', async (req, res, next) => {
     const posts = await features.query.populate({path: "postedBy"}).populate({path: "likedByUsers"}).populate({
         path: "retweetTo",
         select: "-retweetTo"
+    }).populate({
+        path: "replyTo",
+        populate: {path: 'postedBy', select: "userName"}
     })
     // const posts = await Post.find().populate({path: "postedBy"});
 
@@ -45,10 +48,17 @@ router.get('/:id', catchAsync(async (req, res, next) => {
         select: "likedBy -likedPost"
     }).populate({
         path: "retweetBy",
+    }).populate({path: "postedBy"}).populate({path: "replyTo", populate: {path: 'postedBy', select: "userName"}});
+
+    const replies = await Post.find({replyTo: req.params.id}).populate({path: "postedBy"}).populate({path: "replyTo", populate: {path: 'postedBy', select: "userName"}}).populate({
+        path: "likedByUsers",
+        select: "likedBy -likedPost"
     });
+
     return res.status(200).json({
         status: "success",
-        data
+        data,
+        replies
     })
 }))
 
@@ -63,9 +73,9 @@ router.post('/', catchAsync(async (req, res, next) => {
 
     const postData = {
         content: req.body.content,
-        postedBy: req.session.user._id
+        postedBy: req.session.user._id,
+        replyTo: req.body.replyTo
     }
-    console.log(postData)
 
     let post = await Post.create(postData);
 

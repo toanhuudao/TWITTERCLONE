@@ -7,3 +7,39 @@ mixin createPostForm(userLoggedIn)
             .buttonsContainer
                 button#submitPostButton() Post
 
+mixin createReplyModal(userLoggedIn)
+    #replyModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='replyModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#replyModalLabel.modal-title Reply
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    #originalPostContainer
+                    .postFormContainer
+                        .userImageContainer
+                            img(src=userLoggedIn.profilePic , alt="user's profile picture")
+                        .textareaContainer
+                            textarea#replyTextarea(placeholder="What's happening?")
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#submitReplyButton.btn.btn-primary(type='button' ) Reply
+
+mixin createDeleteModal()
+    #deletePostModal.modal.fade(tabindex='-1' role='dialog' aria-labelledby='deleteModalLabel' aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+                .modal-header
+                    h5#deleteModalLabel.modal-title Delete post?
+                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                        span(aria-hidden='true') &times;
+                .modal-body
+                    p you wont able to delete this.
+                .modal-footer
+                    button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                    button#submitDeleteButton.btn.btn-primary(type='button' ) Delete
+
+mixin createPostModals(userLoggedIn)
+    +createReplyModal(userLoggedIn)
+    +createDeleteModal()
