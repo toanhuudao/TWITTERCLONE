@@ -26,15 +26,15 @@ export const createPostHtml = (postData) => {
     const isActiveClass = postData.isLikeByCurrentUser ? "active" : "";
 
     let replyFlag = "";
-    if(postData.replyTo){
-      const replyToUserName = postData.replyTo.postedBy.userName;
+    if (postData.replyTo) {
+        const replyToUserName = postData.replyTo.postedBy.userName;
         replyFlag = `<div class="replyFlag">
         Replying to <a href="/profile/${replyToUserName}">@${replyToUserName}</a>
         </div>`
     }
 
     let buttons = "";
-    if (postData.postedBy._id === userLoggedIn._id){
+    if (postData.postedBy._id === userLoggedIn._id) {
         buttons = `<button data-id="${postData._id}" data-toggle="modal" data-target="#deletePostModal"> 
                         <i class="fas fa-times"></i>
                     </button>`;
@@ -145,10 +145,23 @@ export const retweetPostToggle = async (postId) => {
     }
 }
 
-export const getPostData =async (postId) => {
+export const getPostData = async (postId) => {
     try {
         const res = await axios({
-            method:"GET",
+            method: "GET",
+            url: `http://127.0.0.1:3004/api/posts/${postId}`
+        })
+        return res.data
+    } catch (e) {
+        if (e.response) return e.response.data
+        return e
+    }
+}
+
+export const deletePostData = async (postId) => {
+    try {
+        const res = await axios({
+            method: "DELETE",
             url: `http://127.0.0.1:3004/api/posts/${postId}`
         })
         return res.data

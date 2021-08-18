@@ -43,3 +43,12 @@ mixin createDeleteModal()
 mixin createPostModals(userLoggedIn)
     +createReplyModal(userLoggedIn)
     +createDeleteModal()
+
+mixin createFollowButton(user, isFollowing)
+    - const text = isFollowing? "Following":"Follow";
+    - const buttonClass = isFollowing ? "followButton following":"followButton";
+        button(class=buttonClass data-user = user._id)= text
+
+mixin createTab(name, href, isSelected)
+    - className = isSelected ? "tab active" : "tab"
+    a(href = fref, class=className)= name

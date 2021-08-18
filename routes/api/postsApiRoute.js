@@ -94,6 +94,13 @@ router.post('/', catchAsync(async (req, res, next) => {
     })
 }))
 
+router.delete("/:id", catchAsync(async (req, res, next) => {
+   await Post.findByIdAndDelete(req.params.id);
+    return res.status(202).json({
+        status: "success"
+    })
+}))
+
 router.use('/:postId/likes', likeRouter);
 router.use('/:postId/retweets', tweetsRouter);
 

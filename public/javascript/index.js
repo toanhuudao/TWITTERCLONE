@@ -11,7 +11,7 @@ import {
     outputPosts,
     likePostToggle,
     getPostIdFromElement,
-    retweetPostToggle, getPostData
+    retweetPostToggle, getPostData, deletePostData
 } from "./post";
 import "./home"
 import axios from "axios";
@@ -137,9 +137,26 @@ $(document).ready(async () => {
         const element = $(evt.target);
         const postId = getPostIdFromElement(element);
 
-        if (postId !== undefined && !element.is("button")&&!element.is("i")) {
-            window.location.href=`posts/${postId}`
+        if (postId !== undefined && !element.is("button") && !element.is("i")) {
+            window.location.href = `posts/${postId}`
         }
 
     });
+
+    $("#deletePostModal").on("show.bs.modal", async (evt) => {
+        const button = $(evt.relatedTarget);
+        const postId = getPostIdFromElement(button);
+        $("#submitDeleteButton").data("id", postId);
+    })
+
+    $(document).on("click", "#submitDeleteButton",async (evt) => {
+        const postId =  $("#submitDeleteButton").data().id
+       const res = await deletePostData(postId);
+        console.log(res)
+        if (res.status === "success"){
+            location.reload();
+        }
+    })
+
+
 })
